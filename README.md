@@ -76,14 +76,8 @@ Corner keys: `wvous-tl-corner` (top left), `wvous-tr-corner` (top right),
 
 ### Bug reports (newest first)
 
-- [Apple Community: Upper left hot corner not working - Sequoia 15.5](https://discussions.apple.com/thread/256084416) (2025)
-- [Apple Community: Hot corners not functioning](https://discussions.apple.com/thread/256010093) (2025)
-- [Apple Community: Hot Corners in Sequoia Still Broken](https://discussions.apple.com/thread/255920968) (2024)
-- [Apple Community: How do I fix Hot Corners in Sequoia](https://discussions.apple.com/thread/255843490) (2024)
-- [Apple Community: Hot Corners not working in Ventura](https://discussions.apple.com/thread/254694545) (2023)
-- [Apple Community: Hot Corners regularly stop working - Monterey](https://discussions.apple.com/thread/253855846) (2022)
-- [MacRumors: Screen Saver not working from Hot Corner](https://forums.macrumors.com/threads/screen-saver-not-working-from-hot-corner.2447537/) (2025)
-- [MacRumors: Hot corners working for you?](https://forums.macrumors.com/threads/hot-corners-working-for-you.2367814/) (2022)
+- [Apple Community: Upper left hot corner not working - Sequoia 15.5](https://discussions.apple.com/thread/256084416) (2025) - fixed by unplugging second screen
+- [Apple Community: Hot Corners regularly stop working - Monterey](https://discussions.apple.com/thread/253855846) (2022) - resets after sleep/dock
 - [MacRumors: Hot corners not working after unplugging external monitor](https://forums.macrumors.com/threads/expose-hot-corners-not-working-after-unplugging-external-monitor.672825/) (2009, still active)
 
 ### Technical references
