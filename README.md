@@ -43,10 +43,16 @@ Default hot corner config (edit `set-hot-corners.sh` to change):
 ## Install
 
 ```bash
+cd ~/code
 git clone https://github.com/DiegoSalazar/HotCornerShortcuts.git
 cd HotCornerShortcuts
 bash install.sh
 ```
+
+The LaunchAgent plists assume the repo lives at `~/code/HotCornerShortcuts`. If
+you clone it somewhere else, update the paths in
+`com.diegosalazar.hotcorners.plist` and `com.diegosalazar.hotcorners-monitor.plist`
+before running `install.sh`.
 
 Compiles the Swift daemon, copies both LaunchAgents to
 `~/Library/LaunchAgents/`, and loads them. To apply settings right now:
