@@ -6,12 +6,14 @@
     <string>com.diegosalazar.hotcorners-monitor</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/diego.salazar/code/HotCornerShortcuts/display-monitor</string>
+        <string>/Users/diego.salazar/code/HotCornerShortcuts/HotCornersMonitor.app/Contents/MacOS/display-monitor</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>AssociatedBundleIdentifiers</key>
+    <string>com.diegosalazar.hotcorners-monitor</string>
     <key>StandardOutPath</key>
     <string>/tmp/hotcorners-monitor.log</string>
     <key>StandardErrorPath</key>

@@ -4,13 +4,16 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 AGENTS_DIR="$HOME/Library/LaunchAgents"
+APP_BUNDLE="$SCRIPT_DIR/HotCornersMonitor.app"
+APP_BIN="$APP_BUNDLE/Contents/MacOS/display-monitor"
 
-# Build the display monitor binary
+# Build the display monitor binary into the app bundle
 echo "Compiling display-monitor..."
-swiftc -O -o "$SCRIPT_DIR/display-monitor" "$SCRIPT_DIR/display-monitor.swift" -framework CoreGraphics
+mkdir -p "$APP_BUNDLE/Contents/MacOS"
+swiftc -O -o "$APP_BIN" "$SCRIPT_DIR/display-monitor.swift" -framework CoreGraphics
 
 chmod +x "$SCRIPT_DIR/set-hot-corners.sh"
-chmod +x "$SCRIPT_DIR/display-monitor"
+chmod +x "$APP_BIN"
 
 # Unload existing agents if present
 for label in com.diegosalazar.hotcorners com.diegosalazar.hotcorners-monitor; do
