@@ -43,6 +43,8 @@ Default hot corner config (edit `set-hot-corners.sh` to change):
 ## Install
 
 ```bash
+git clone https://github.com/DiegoSalazar/HotCornerShortcuts.git
+cd HotCornerShortcuts
 bash install.sh
 ```
 
