@@ -8,7 +8,13 @@ reliable fix is to re-apply the settings automatically.
 
 ## What it does
 
-A shell script + LaunchAgent that enforces your hot corner config:
+Enforces your hot corner config via two mechanisms:
+
+1. **Display monitor daemon**: a small Swift binary that uses
+   `CGDisplayRegisterReconfigurationCallback` to detect monitor plug/unplug
+   events and re-apply settings instantly.
+2. **Scheduled safety net**: a LaunchAgent that runs every Monday and Friday
+   at 8:00 AM to catch any drift.
 
 | Corner | Action |
 |--------|--------|
@@ -18,7 +24,7 @@ A shell script + LaunchAgent that enforces your hot corner config:
 | Bottom right | Start Screen Saver |
 
 The script checks current values before writing, so the Dock only restarts when
-settings have actually drifted. It runs on login and every 5 minutes.
+settings have actually drifted.
 
 ## Install
 
@@ -26,9 +32,10 @@ settings have actually drifted. It runs on login and every 5 minutes.
 bash install.sh
 ```
 
-This copies the LaunchAgent to `~/Library/LaunchAgents/` and loads it.
+This compiles the display monitor, copies both LaunchAgents to
+`~/Library/LaunchAgents/`, and loads them.
 
-To apply settings immediately without waiting:
+To apply settings immediately:
 
 ```bash
 bash set-hot-corners.sh
@@ -42,7 +49,7 @@ bash uninstall.sh
 
 ## Customizing
 
-Edit the `DESIRED` map in `set-hot-corners.sh`. Action codes:
+Edit `set-hot-corners.sh` to change which corners do what. Action codes:
 
 | Code | Action |
 |------|--------|
@@ -62,10 +69,13 @@ Corner keys: `wvous-tl-corner` (top left), `wvous-tr-corner` (top right),
 
 ## Logs
 
-Output goes to `/tmp/hotcorners.log`.
+- Scheduled checks: `/tmp/hotcorners.log`
+- Display monitor: `/tmp/hotcorners-monitor.log`
 
 ## References
 
 - [Setting Mac hot corners in the terminal](https://dev.to/darrinndeal/setting-mac-hot-corners-in-the-terminal-3de)
+- [Apple: CGDisplayRegisterReconfigurationCallback](https://developer.apple.com/documentation/coregraphics/1455336-cgdisplayregisterreconfiguration)
+- [Display reconfigurations on macOS](https://nonstrict.eu/blog/2023/display-reconfigurations-on-macos/)
 - [Apple Community: Hot Corners regularly stop working](https://discussions.apple.com/thread/253855846)
 - [MacRumors: Hot corners not working after unplugging external monitor](https://forums.macrumors.com/threads/expose-hot-corners-not-working-after-unplugging-external-monitor.672825/)

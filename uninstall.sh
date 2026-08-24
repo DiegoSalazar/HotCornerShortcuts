@@ -1,13 +1,14 @@
 #!/bin/bash
 #
-# uninstall.sh: removes the hot corners LaunchAgent
+# uninstall.sh: removes both hot corners LaunchAgents
 
-PLIST_DST="$HOME/Library/LaunchAgents/com.diegosalazar.hotcorners.plist"
+AGENTS_DIR="$HOME/Library/LaunchAgents"
 
-if launchctl list | grep -q com.diegosalazar.hotcorners; then
-  launchctl unload "$PLIST_DST"
-fi
-
-rm -f "$PLIST_DST"
+for label in com.diegosalazar.hotcorners com.diegosalazar.hotcorners-monitor; do
+  if launchctl list | grep -q "$label"; then
+    launchctl unload "$AGENTS_DIR/$label.plist"
+  fi
+  rm -f "$AGENTS_DIR/$label.plist"
+done
 
 echo "Uninstalled. Hot corners will no longer be auto-enforced."
