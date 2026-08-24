@@ -1,30 +1,44 @@
 # HotCornerShortcuts
 
-Workaround for the long-standing macOS bug where hot corner settings reset when
-docking/undocking external monitors.
+Automatically fixes macOS hot corners that break when you plug in or unplug
+an external monitor.
 
-Apple has not fixed this across Sierra through Tahoe (macOS 26). The only
-reliable fix is to re-apply the settings automatically.
+## The problem
 
-## What it does
+macOS hot corners stop working after display configuration changes (docking,
+undocking, monitor sleep/wake). This has been reported across every macOS
+version from Leopard (2009) through Tahoe (2026) and Apple has never fixed it.
 
-Enforces your hot corner config via two mechanisms:
+What actually happens: the Dock process manages hot corner triggers and maps
+them to screen coordinates. When a display is added or removed, the Dock loses
+track of the screen geometry. Corners either stop responding entirely or get
+mapped to the wrong display's coordinate space (e.g. your top-left corner
+triggers on the external monitor instead of your laptop). The settings in
+System Settings may still look correct, but the Dock's internal state is stale.
 
-1. **Display monitor daemon**: a small Swift binary that uses
-   `CGDisplayRegisterReconfigurationCallback` to detect monitor plug/unplug
-   events and re-apply settings instantly.
+The fix is simple: restart the Dock (`killall Dock`). But doing that manually
+every time you plug in a monitor gets old fast.
+
+## What this does
+
+A background daemon detects monitor plug/unplug events and automatically
+restarts the Dock to re-initialize hot corner mapping. It also re-applies your
+preferred hot corner settings in case they drifted.
+
+Two components:
+
+1. **Display monitor daemon** (`display-monitor.swift`): uses
+   `CGDisplayRegisterReconfigurationCallback` to detect display changes and
+   runs the fix within 3 seconds.
 2. **Scheduled safety net**: a LaunchAgent that runs every Monday and Friday
-   at 8:00 AM to catch any drift.
+   at 8:00 AM to catch any drift missed by the daemon.
+
+Default hot corner config (edit `set-hot-corners.sh` to change):
 
 | Corner | Action |
 |--------|--------|
 | Top left | Disable Screen Saver |
-| Top right | (none) |
-| Bottom left | (none) |
 | Bottom right | Start Screen Saver |
-
-The script checks current values before writing, so the Dock only restarts when
-settings have actually drifted.
 
 ## Install
 
@@ -32,10 +46,8 @@ settings have actually drifted.
 bash install.sh
 ```
 
-This compiles the display monitor, copies both LaunchAgents to
-`~/Library/LaunchAgents/`, and loads them.
-
-To apply settings immediately:
+Compiles the Swift daemon, copies both LaunchAgents to
+`~/Library/LaunchAgents/`, and loads them. To apply settings right now:
 
 ```bash
 bash set-hot-corners.sh
@@ -49,7 +61,7 @@ bash uninstall.sh
 
 ## Customizing
 
-Edit `set-hot-corners.sh` to change which corners do what. Action codes:
+Edit `set-hot-corners.sh`. Action codes:
 
 | Code | Action |
 |------|--------|
@@ -76,13 +88,12 @@ Corner keys: `wvous-tl-corner` (top left), `wvous-tr-corner` (top right),
 
 ### Bug reports (newest first)
 
-- [Apple Community: Upper left hot corner not working - Sequoia 15.5](https://discussions.apple.com/thread/256084416) (2025) - fixed by unplugging second screen
-- [Apple Community: Hot Corners regularly stop working - Monterey](https://discussions.apple.com/thread/253855846) (2022) - resets after sleep/dock
-- [MacRumors: Hot corners not working after unplugging external monitor](https://forums.macrumors.com/threads/expose-hot-corners-not-working-after-unplugging-external-monitor.672825/) (2009, still active)
+- [Apple Community: Upper left hot corner not working - Sequoia 15.5](https://discussions.apple.com/thread/256084416) (2025) - corners map to wrong display after connecting second monitor
+- [Apple Community: Hot Corners regularly stop working - Monterey](https://discussions.apple.com/thread/253855846) (2022) - corners stop responding after sleep/dock, `killall Dock` fixes temporarily
+- [MacRumors: Hot corners not working after unplugging external monitor](https://forums.macrumors.com/threads/expose-hot-corners-not-working-after-unplugging-external-monitor.672825/) (2009, still active) - corners die after disconnecting external display, changing resolution or toggling settings restores them
 
 ### Technical references
 
 - [Setting Mac hot corners in the terminal](https://dev.to/darrinndeal/setting-mac-hot-corners-in-the-terminal-3de)
 - [Apple: CGDisplayRegisterReconfigurationCallback](https://developer.apple.com/documentation/coregraphics/1455336-cgdisplayregisterreconfiguration)
 - [Display reconfigurations on macOS](https://nonstrict.eu/blog/2023/display-reconfigurations-on-macos/)
-- [8 Ways to Fix Hot Corners Not Working in macOS Sequoia](https://360-reader.com/ways-to-fix-hot-corners-not-working-on-mac/)
